@@ -5,6 +5,7 @@ import com.nhnacademy.ssacthree_shop_api.customer.domain.Customer;
 import com.nhnacademy.ssacthree_shop_api.customer.dto.CustomerCreateRequest;
 import com.nhnacademy.ssacthree_shop_api.customer.service.CustomerService;
 import com.nhnacademy.ssacthree_shop_api.memberset.member.domain.Member;
+import com.nhnacademy.ssacthree_shop_api.memberset.member.domain.MemberStatus;
 import com.nhnacademy.ssacthree_shop_api.memberset.member.dto.MemberInfoGetResponse;
 import com.nhnacademy.ssacthree_shop_api.memberset.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.ssacthree_shop_api.memberset.member.dto.MemberRegisterRequest;
@@ -95,13 +96,27 @@ public class MemberServiceImpl implements MemberService {
         customer.setCustomerEmail(memberInfoUpdateRequest.getCustomerEmail());
 
         memberRepository.save(member);
-        MessageResponse messageResponse = new MessageResponse("생성 성공");
 
-        return messageResponse;
+
+        return new MessageResponse("생성 성공");
     }
 
+    /**
+     * soft delete
+     * @param memberLoginId
+     * @return
+     */
     @Override
-    public void deleteMember(String memberLoginId) {
+    public MessageResponse deleteMember(String memberLoginId) {
+        Member member = memberRepository.findByMemberLoginId(memberLoginId).orElse(null);
 
+        if(member == null) {
+            throw new MemberNotFoundException("멤버를 찾을 수 없습니다.");
+        }
+
+        member.setMemberStatus(MemberStatus.WITHDRAW);
+        memberRepository.save(member);
+
+        return new MessageResponse("삭제 성공");
     }
 }

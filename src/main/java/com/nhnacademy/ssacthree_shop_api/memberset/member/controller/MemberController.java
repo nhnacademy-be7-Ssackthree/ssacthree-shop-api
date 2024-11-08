@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,17 +36,23 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageResponse);
     }
 
-    @GetMapping("/my-page")
-    public ResponseEntity<MemberInfoGetResponse> getMemberInfo(@RequestHeader(name = "X-USER-ID") String header) {
+    @DeleteMapping
+    public ResponseEntity<MessageResponse> deleteMember(@RequestHeader(name="X-USER-ID") String memberId) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.deleteMember(memberId));
+    }
 
-        MemberInfoGetResponse memberInfoGetResponse = memberService.getMemberInfoById(header);
+
+    @GetMapping("/my-page")
+    public ResponseEntity<MemberInfoGetResponse> getMemberInfo(@RequestHeader(name = "X-USER-ID") String memberId) {
+
+        MemberInfoGetResponse memberInfoGetResponse = memberService.getMemberInfoById(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(memberInfoGetResponse);
 
     }
 
     @PutMapping("/my-page")
-    public ResponseEntity<MessageResponse> updateMemberInfo(@RequestHeader(name = "X-USER-ID") String header, @RequestBody MemberInfoUpdateRequest  memberInfoUpdateRequest) {
-        MessageResponse messageResponse = memberService.updateMember(header, memberInfoUpdateRequest);
+    public ResponseEntity<MessageResponse> updateMemberInfo(@RequestHeader(name = "X-USER-ID") String memberId, @RequestBody MemberInfoUpdateRequest  memberInfoUpdateRequest) {
+        MessageResponse messageResponse = memberService.updateMember(memberId, memberInfoUpdateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
     }
 }

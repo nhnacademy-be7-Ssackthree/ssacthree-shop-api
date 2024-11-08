@@ -13,7 +13,7 @@ public interface MemberService {
 
     MessageResponse updateMember(String memberLoginId, MemberInfoUpdateRequest memberInfoUpdateRequest);
 
-    void deleteMember(String memberLoginId);
+    MessageResponse deleteMember(String memberLoginId);
 
 
 

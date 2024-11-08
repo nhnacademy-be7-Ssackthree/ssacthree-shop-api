@@ -61,6 +61,7 @@ public class Member {
 
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private MemberStatus memberStatus = MemberStatus.ACTIVE;
 
     private int memberPoint = 0;
