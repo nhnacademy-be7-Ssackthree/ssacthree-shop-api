@@ -11,7 +11,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BookCustomRepository{
+public interface BookCustomRepository {
+
     // 제일 최신에 출판한 책 순서로 조회
     Page<BookInfoResponse> findRecentBooks(Pageable pageable);
 
@@ -41,6 +42,18 @@ public interface BookCustomRepository{
     // 책의 카테고리 루트 검색
 
     // 태그로 책 검색
+
+    // 책으로 작가 이름 검색
+    List<String> findAuthorNamesByBookId(Long bookId);
+
+    // 책으로 출판사 이름 검색
+    String findPublisherNameByBookId(Long bookId);
+
+    // 책으로 태그 명 검색
+    List<String> findTagNamesByBookId(Long bookId);
+
+    // 책으로 속하는 모든 카테고리 검색
+    List<String> findCategoryNamesByBookId(Long bookId);
 
 
 }

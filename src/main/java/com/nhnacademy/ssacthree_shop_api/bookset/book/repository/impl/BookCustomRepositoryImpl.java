@@ -270,4 +270,79 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .where(book.bookId.eq(bookId))
                 .fetchOne();
     }
+
+    /**
+     * 책 ID로 책의 작가(이름)를 가져옵니다.
+     * @param bookId 책 아이디
+     * @return 작가 이름
+     */
+    @Override
+    public List<String> findAuthorNamesByBookId(Long bookId) {
+        QBook book = QBook.book;
+        QAuthor author = QAuthor.author;
+        QBookAuthor bookAuthor = QBookAuthor.bookAuthor;
+
+        return queryFactory
+            .select(author.authorName)
+            .from(book)
+            .join(bookAuthor).on(book.bookId.eq(bookAuthor.book.bookId))
+            .join(author).on(author.authorId.eq(bookAuthor.author.authorId))
+            .where(book.bookId.eq(bookId))
+            .fetch();
+    }
+
+
+    /**
+     * 책으로 출판사명을 가져옴.
+     * @param bookId
+     * @return 출판사명
+     */
+    @Override
+    public String findPublisherNameByBookId(Long bookId) {
+        QBook book = QBook.book;
+        return queryFactory
+            .select(book.publisher.publisherName)
+            .from(book)
+            .where(book.bookId.eq(bookId))
+            .fetchOne();
+    }
+
+
+    /**
+     * 책으로 태그들의 name을 조회
+     * @param bookId
+     * @return 태그명 반환 (없다면 null을 그대로 저장)
+     */
+    @Override
+    public List<String> findTagNamesByBookId(Long bookId){
+        QBookTag qBookTag = QBookTag.bookTag;
+        QTag tag = QTag.tag;
+
+        return queryFactory
+            .select(tag.tagName)
+            .from(bookTag)
+            .join(bookTag.tag, tag)
+            .where(bookTag.book.bookId.eq(bookId))
+            .fetch();
+    }
+
+
+    /**
+     * 책으로 카테고리들의 name을 조회
+     * @param bookId
+     * @return
+     */
+    @Override
+    public List<String> findCategoryNamesByBookId(Long bookId){
+        QBookCategory bookCategory = QBookCategory.bookCategory;
+        QCategory category = QCategory.category;
+
+        return queryFactory
+            .select(category.categoryName)
+            .from(bookCategory)
+            .join(bookCategory.category, category)
+            .where(bookCategory.book.bookId.eq(bookId))
+            .fetch();
+    }
+
 }
